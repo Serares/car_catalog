@@ -13,6 +13,9 @@ export default {
   name: "home",
   components: {
     HelloWorld
+  },
+  mounted:()=>{
+    console.log("Component mounted")
   }
 };
 </script>
