@@ -2,6 +2,6 @@
 
 export default {
     reqUrl(){
-        return "https://car-catalog-server.herokuapp.com/"
+        return "https://car-catalog-server.herokuapp.com"
     }
 }
