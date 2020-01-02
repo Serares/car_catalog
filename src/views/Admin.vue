@@ -16,15 +16,30 @@
       <div v-if="selectedAction === 0">
         <AddCarForm :addCar="addCar" />
       </div>
-      <div v-else-if="selectedAction === 1">Modifica</div>
+      <div v-else-if="selectedAction === 1">
+        <ModifyCarForm :selectedCarsData="selectedCarsData" :modifyCar="modifyCar">
+          <ItemsTable
+            :getRowDataForTableItems="getRowDataForTableItems"
+            :fetchDataFromApi="fetchDataFromApi"
+          />
+        </ModifyCarForm>
+      </div>
       <div v-else-if="selectedAction === 2">
-        <DeleteCarForm :deleteCar="deleteCar" />
+        <DeleteCarForm :selectedCarsData="selectedCarsData" :deleteCar="deleteCar">
+          <ItemsTable
+            :getRowDataForTableItems="getRowDataForTableItems"
+            :fetchDataFromApi="fetchDataFromApi"
+          />
+        </DeleteCarForm>
       </div>
       <div v-else>
         Selecteaza o actiune
         <!-- aici sa fie un tabel cu toate masinile din baza de date -->
         <div>
-          <ItemsTable />
+          <ItemsTable
+            :getRowDataForTableItems="getRowDataForTableItems"
+            :fetchDataFromApi="fetchDataFromApi"
+          />
         </div>
       </div>
     </b-container>
@@ -36,12 +51,14 @@
 import RequestURL from "@/services/requestUrl";
 import AddCarForm from "@/components/AddCarForm";
 import DeleteCarForm from "@/components/DeleteCarForm";
+import ModifyCarForm from "@/components/ModifyCarForm";
 import ItemsTable from "../components/ItemsTable";
 
 export default {
   components: {
     AddCarForm,
     DeleteCarForm,
+    ModifyCarForm,
     ItemsTable
   },
   data() {
@@ -51,7 +68,8 @@ export default {
         { value: "Adauga" },
         { value: "Modifica" },
         { value: "Sterge" }
-      ]
+      ],
+      selectedCarsData: {}
     };
   },
   computed: {},
@@ -64,8 +82,39 @@ export default {
       console.log(response.data);
     },
     */
+    getRowDataForTableItems: function(rowData) {
+      //  console.log("Date", rowData);
+      this.selectedCarsData = { ...rowData };
+    },
+    fetchDataFromApi: function() {
+      let carsArray = [];
+      return new Promise((resolve, reject) => {
+        let xhr = new XMLHttpRequest();
+        xhr.open("GET", RequestURL.reqUrl() + "/getItems/masini/");
+        //response type json so it's automatically JSON.parse();
+        xhr.responseType = "json";
+        xhr.onerror = function() {
+          reject(xhr.statustext);
+        };
+        xhr.onloadstart = function() {
+          // console.log("XHR Started");
+        };
+        xhr.onload = function() {
+          let response = xhr.response;
+          // console.log("Datele din xhr", response);
+          for (let item in response) {
+            carsArray.push({
+              ...response[item],
+              imagine: `<img class='car-images' style='display:block; max-width:120px;' src='${response[item].imagine}' />`
+            });
+          }
+          resolve(carsArray);
+        };
+        xhr.send();
+      });
+    },
     selectAction(itemIndex) {
-      console.log("Added events");
+      // console.log("Added events");
       this.selectedAction = itemIndex;
     },
     addCar(jsonForm) {
@@ -82,30 +131,55 @@ export default {
           return res.json();
         })
         .then(data => {
-          console.log(data);
+          data;
+          // console.log(data);
         })
         .catch(err => {
           console.log(err);
         });
     },
-    deleteCar(carID) {
-      console.log("Delete car", carID);
+    deleteCar(carsData) {
+      // console.log("Delete car", carsData);
       fetch(RequestURL.reqUrl() + "/deleteItems", {
         method: "DELETE",
         headers: {
           Accept: "application/json",
           "Content-Type": "application/json"
         },
-        body: JSON.stringify({ carID: carID })
+        body: JSON.stringify(carsData)
+      })
+        .then(res => {
+          return res.json();
+        })
+        .then(data => {
+          data;
+          // console.log(data);
+        })
+        .catch(error => {
+          console.log(error);
+        });
+    },
+    modifyCar(payload) {
+      fetch(RequestURL.reqUrl() + "/updateItem", {
+        method: "PUT",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(payload)
       })
         .then(res => {
           return res.json();
         })
         .then(data => {
           console.log(data);
+        })
+        .catch(err => {
+          console.log(err);
         });
     }
   },
+
   mounted: function() {
     console.log(RequestURL.reqUrl());
     /*

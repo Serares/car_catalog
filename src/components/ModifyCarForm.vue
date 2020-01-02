@@ -1,6 +1,7 @@
 <template>
   <div class="modify_car_form">
-    <b-form @submit.prevent="submitHandler">
+    <h2>{{Object.keys(selectedCarsData).length > 0? "": "Selecteaza un rand"}}</h2>
+    <b-form v-if="Object.keys(selectedCarsData).length > 0" @submit.prevent="submitHandler">
       <b-form-group
         id="input-group-1"
         label="Brand:"
@@ -61,36 +62,36 @@
       <b-button type="submit" variant="primary">Submit</b-button>
       <b-button type="reset" variant="danger">Reset</b-button>
     </b-form>
-    <ItemsTable />
+    <!-- items table -->
+    <slot></slot>
   </div>
 </template>
 <script>
-import ItemsTable from './ItemsTable'
 
 export default {
   props: {
-    addCar: Function
+    modifyCar: Function,
+    selectedCarsData:Object
   },
   components:{
-      ItemsTable
   },
   data() {
     return {
       formaCaroserie: ["sedan", "coupe", "cabriolet", "duba"],
       form: {
-        brand: "",
-        model: "",
-        formaCaroserie: "",
-        capacitateCilindrica: "",
-        caiPutere: "",
-        culoare: "",
-        imagine: ""
+        ...this.selectedCarsData
       }
     };
   },
+  watch:{
+    selectedCarsData: function(newVal,oldVal){
+      oldVal;
+      this.form = {...newVal};
+    }
+  },
   methods: {
     submitHandler() {
-      this.addCar(this.form);
+      this.modifyCar(this.form);
       // clear form fields
       // for(let item in this.form){
       //   this.form[item] = "";

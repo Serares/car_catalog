@@ -1,50 +1,51 @@
 <template>
   <!-- table where all items will be displayed for delete car and modify car forms -->
-    <div class="tabel-car-items" v-if="carsArray.length > 0">
-      <b-table responsive="sm" striped hover :items="carsArray">
-        <template :v-slot:cell(imagine)="carsArray">
-          <span v-html="carsArray.value"></span>
-        </template>
-      </b-table>
-    </div>
+  <div class="tabel-car-items" v-if="carsArray.length > 0">
+    <b-table responsive="sm" striped hover :items="carsArray" :fields="fields">
+      <template v-slot:cell(imagine)="data">
+        <span v-html="data.value" class="table-images"></span>
+      </template>
+      <template v-slot:cell(brand)="data">
+        <a :href="'#'" @click.prevent="selectRow(data)" class="brand-name">{{data.value}}</a>
+      </template>
+    </b-table>
+  </div>
 </template>
 
 <script>
-import RequestURL from "../services/requestUrl";
-
 export default {
   data() {
     return {
+      fields: ["brand", "imagine", "formaCaroserie", "culoare", "model", "caiPutere", "capacitateCilindrica"],
       carsArray: []
     };
   },
   props: {
-    carsData: Object
+    fetchDataFromApi: Function,
+    getRowDataForTableItems:Function
   },
   methods: {
-    fetchDataFromApi: function() {
-      let _this = this;
-      let xhr = new XMLHttpRequest();
-      xhr.open("GET", RequestURL.reqUrl() + "/getItems/masini/");
-      xhr.send();
-      xhr.onloadstart = function() {
-        console.log("XHR Started");
-      };
-      xhr.onload = function() {
-        let response = JSON.parse(xhr.response);
-        console.log(response);
-        for (let item in response) {
-          _this.carsArray.push({
-            ...response[item]
-          });
-        }
-      };
+    selectRow(data) {
+    //   console.log({...data.item});
+      this.getRowDataForTableItems(data.item);
     }
   },
   computed: {},
   mounted: function() {
-    console.log("ItemsTable mounted");
-    this.fetchDataFromApi();
+    // console.log("ItemsTable mounted");
+    this.fetchDataFromApi()
+      .then(carsData => {
+        this.carsArray = carsData;
+      })
+      .catch(err => {
+        console.log(err);
+      });
   }
 };
 </script>
+
+<style scoped>
+.table-images {
+  display: block;
+}
+</style>
