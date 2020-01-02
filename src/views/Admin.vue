@@ -132,7 +132,7 @@ export default {
         })
         .then(data => {
           data;
-          // console.log(data);
+          console.log(data);
         })
         .catch(err => {
           console.log(err);
@@ -153,7 +153,7 @@ export default {
         })
         .then(data => {
           data;
-          // console.log(data);
+          console.log(data);
         })
         .catch(error => {
           console.log(error);
