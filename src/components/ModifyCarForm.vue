@@ -1,5 +1,5 @@
 <template>
-  <div class="add_car_form">
+  <div class="modify_car_form">
     <b-form @submit.prevent="submitHandler">
       <b-form-group
         id="input-group-1"
@@ -61,12 +61,18 @@
       <b-button type="submit" variant="primary">Submit</b-button>
       <b-button type="reset" variant="danger">Reset</b-button>
     </b-form>
+    <ItemsTable />
   </div>
 </template>
 <script>
+import ItemsTable from './ItemsTable'
+
 export default {
   props: {
     addCar: Function
+  },
+  components:{
+      ItemsTable
   },
   data() {
     return {

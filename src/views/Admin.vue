@@ -17,7 +17,9 @@
         <AddCarForm :addCar="addCar" />
       </div>
       <div v-else-if="selectedAction === 1">Modifica</div>
-      <div v-else-if="selectedAction === 2">Sterge</div>
+      <div v-else-if="selectedAction === 2">
+        <DeleteCarForm :deleteCar="deleteCar" />
+      </div>
       <div v-else>
         Selecteaza o actiune
         <!-- aici sa fie un tabel cu toate masinile din baza de date -->
@@ -28,12 +30,16 @@
 
 <script>
 // import Authentication from "@/services/AuthenticationService";
-import RequestHandler from "@/services/requestHandlers.js";
+import RequestURL from "@/services/requestUrl";
 import AddCarForm from "@/components/AddCarForm";
+import DeleteCarForm from "@/components/DeleteCarForm";
+import { mapActions } from "vuex";
+import carsData from '../data/carsData';
 
 export default {
   components: {
-    AddCarForm
+    AddCarForm,
+    DeleteCarForm
   },
   data() {
     return {
@@ -55,12 +61,13 @@ export default {
       console.log(response.data);
     },
     */
+    ...mapActions(["addData"]),
     selectAction(itemIndex) {
       console.log("Added events");
       this.selectedAction = itemIndex;
     },
     addCar(jsonForm) {
-      fetch(RequestHandler.reqUrl()+"/addCar", {
+      fetch(RequestURL.reqUrl() + "/addCar", {
         method: "POST",
         headers: {
           Accept: "application/json",
@@ -75,13 +82,28 @@ export default {
         .then(data => {
           console.log(data);
         })
-        .catch(err =>{
+        .catch(err => {
           console.log(err);
+        });
+    },
+    deleteCar(carID) {
+      console.log("Delete car");
+      fetch(RequestURL.reqUrl() + "deleteItems", {
+        method: "DELETE",
+        body: { carID: carID }
+      })
+        .then(res => {
+          return res.json();
+        })
+        .then(data => {
+          console.log(data);
         });
     }
   },
   mounted: () => {
-    console.log(RequestHandler.reqUrl());
+    console.log(RequestURL.reqUrl());
+    carsData.then(response=>{console.log(response)})
+    // this.addData(payload);
   }
 };
 </script>

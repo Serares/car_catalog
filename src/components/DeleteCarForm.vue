@@ -1,5 +1,5 @@
 <template>
-  <div class="add_car_form">
+  <div class="delete_car_form">
     <b-form @submit.prevent="submitHandler">
       <b-form-group
         id="input-group-1"
@@ -61,12 +61,17 @@
       <b-button type="submit" variant="primary">Submit</b-button>
       <b-button type="reset" variant="danger">Reset</b-button>
     </b-form>
+    <ItemsTable />
   </div>
+  
 </template>
 <script>
+import ItemsTable from "../components/ItemsTable";
+
 export default {
-  props: {
-    addCar: Function
+  props: {},
+  components: {
+    ItemsTable
   },
   data() {
     return {
@@ -83,13 +88,7 @@ export default {
     };
   },
   methods: {
-    submitHandler() {
-      this.addCar(this.form);
-      // clear form fields
-      // for(let item in this.form){
-      //   this.form[item] = "";
-      // }
-    }
+    submitHandler() {}
   }
 };
 </script>
