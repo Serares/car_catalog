@@ -12,11 +12,11 @@ export default new Vuex.Store({
   },
   mutations: {
     appendData: (state, payload) => {
-      state.carsData[payload.colection] = payload.data;
+      state.carsData[payload.collection] = payload.data;
     }
   },
   actions: {
-    addData: (context, payload) => {
+    getDataToStore: (context, payload) => {
       context.commit('appendData', payload)
     }
   },

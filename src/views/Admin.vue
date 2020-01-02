@@ -23,6 +23,9 @@
       <div v-else>
         Selecteaza o actiune
         <!-- aici sa fie un tabel cu toate masinile din baza de date -->
+        <div>
+          <ItemsTable />
+        </div>
       </div>
     </b-container>
   </div>
@@ -33,13 +36,13 @@
 import RequestURL from "@/services/requestUrl";
 import AddCarForm from "@/components/AddCarForm";
 import DeleteCarForm from "@/components/DeleteCarForm";
-import { mapActions } from "vuex";
-import carsData from '../data/carsData';
+import ItemsTable from "../components/ItemsTable";
 
 export default {
   components: {
     AddCarForm,
-    DeleteCarForm
+    DeleteCarForm,
+    ItemsTable
   },
   data() {
     return {
@@ -61,7 +64,6 @@ export default {
       console.log(response.data);
     },
     */
-    ...mapActions(["addData"]),
     selectAction(itemIndex) {
       console.log("Added events");
       this.selectedAction = itemIndex;
@@ -87,10 +89,14 @@ export default {
         });
     },
     deleteCar(carID) {
-      console.log("Delete car");
-      fetch(RequestURL.reqUrl() + "deleteItems", {
+      console.log("Delete car", carID);
+      fetch(RequestURL.reqUrl() + "/deleteItems", {
         method: "DELETE",
-        body: { carID: carID }
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ carID: carID })
       })
         .then(res => {
           return res.json();
@@ -100,10 +106,25 @@ export default {
         });
     }
   },
-  mounted: () => {
+  mounted: function() {
     console.log(RequestURL.reqUrl());
-    carsData.then(response=>{console.log(response)})
-    // this.addData(payload);
+    /*
+    let payload = {
+      data: {},
+      collection: ""
+    };
+    carsData
+      .then((response)=>{
+        payload.data = {...response};
+        payload.collection = "masini";
+        console.log(payload);
+        this.getData(payload);
+        this.updateStateWithCarsData(payload);
+      })
+      .catch(err => {
+        console.log("error carsdata ", err);
+      });
+    */
   }
 };
 </script>
