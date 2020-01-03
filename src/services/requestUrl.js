@@ -8,7 +8,7 @@ const devURL = "http://localhost:5500";
 
 export default {
     reqUrl(){
-        prodURL;
-        return devURL;
+        devURL;
+        return prodURL;
     }
 }
