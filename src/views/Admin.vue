@@ -53,6 +53,7 @@ import AddCarForm from "@/components/AddCarForm";
 import DeleteCarForm from "@/components/DeleteCarForm";
 import ModifyCarForm from "@/components/ModifyCarForm";
 import ItemsTable from "../components/ItemsTable";
+import {fetchDataFromApi} from "../data/carsDataRequest";
 
 export default {
   components: {
@@ -86,33 +87,7 @@ export default {
       //  console.log("Date", rowData);
       this.selectedCarsData = { ...rowData };
     },
-    fetchDataFromApi: function() {
-      let carsArray = [];
-      return new Promise((resolve, reject) => {
-        let xhr = new XMLHttpRequest();
-        xhr.open("GET", RequestURL.reqUrl() + "/getItems/masini/");
-        //response type json so it's automatically JSON.parse();
-        xhr.responseType = "json";
-        xhr.onerror = function() {
-          reject(xhr.statustext);
-        };
-        xhr.onloadstart = function() {
-          // console.log("XHR Started");
-        };
-        xhr.onload = function() {
-          let response = xhr.response;
-          // console.log("Datele din xhr", response);
-          for (let item in response) {
-            carsArray.push({
-              ...response[item],
-              imagine: `<img class='car-images' style='display:block; max-width:120px;' src='${response[item].imagine}' />`
-            });
-          }
-          resolve(carsArray);
-        };
-        xhr.send();
-      });
-    },
+    fetchDataFromApi: fetchDataFromApi,
     selectAction(itemIndex) {
       // console.log("Added events");
       this.selectedAction = itemIndex;

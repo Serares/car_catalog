@@ -73,8 +73,7 @@ export default {
     modifyCar: Function,
     selectedCarsData:Object
   },
-  components:{
-  },
+  components:{},
   data() {
     return {
       formaCaroserie: ["sedan", "coupe", "cabriolet", "duba"],
