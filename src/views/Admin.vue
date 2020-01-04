@@ -1,6 +1,12 @@
 <template>
   <div class="admin">
     <b-container>
+      <div>
+        <b-modal hide-footer ref="my-modal" id="modal-1" title="Date trimise success">
+          <p class="b-block text-center">Date trimise</p>
+          <p>{{resSuccessMessage}}</p>
+        </b-modal>
+      </div>
       <div>Welcome to admin page</div>
       <div>
         <b-nav pills align="center">
@@ -19,6 +25,7 @@
       <div v-else-if="selectedAction === 1">
         <ModifyCarForm :selectedCarsData="selectedCarsData" :modifyCar="modifyCar">
           <ItemsTable
+            :shouldItemsTableFetch="shouldItemsTableFetch"
             :getRowDataForTableItems="getRowDataForTableItems"
             :fetchDataFromApi="fetchDataFromApi"
           />
@@ -27,6 +34,7 @@
       <div v-else-if="selectedAction === 2">
         <DeleteCarForm :selectedCarsData="selectedCarsData" :deleteCar="deleteCar">
           <ItemsTable
+            :shouldItemsTableFetch="shouldItemsTableFetch"
             :getRowDataForTableItems="getRowDataForTableItems"
             :fetchDataFromApi="fetchDataFromApi"
           />
@@ -37,6 +45,7 @@
         <!-- aici sa fie un tabel cu toate masinile din baza de date -->
         <div>
           <ItemsTable
+            :shouldItemsTableFetch="shouldItemsTableFetch"
             :getRowDataForTableItems="getRowDataForTableItems"
             :fetchDataFromApi="fetchDataFromApi"
           />
@@ -53,7 +62,7 @@ import AddCarForm from "@/components/AddCarForm";
 import DeleteCarForm from "@/components/DeleteCarForm";
 import ModifyCarForm from "@/components/ModifyCarForm";
 import ItemsTable from "../components/ItemsTable";
-import {fetchDataFromApi} from "../data/carsDataRequest";
+import { fetchDataFromApi } from "../data/carsDataRequest";
 
 export default {
   components: {
@@ -70,7 +79,9 @@ export default {
         { value: "Modifica" },
         { value: "Sterge" }
       ],
-      selectedCarsData: {}
+      selectedCarsData: {},
+      resSuccessMessage: "",
+      shouldItemsTableFetch: false
     };
   },
   computed: {},
@@ -83,7 +94,24 @@ export default {
       console.log(response.data);
     },
     */
-    getRowDataForTableItems: function(rowData) {
+    itemsTableFetch() {
+      // un flag care indica faptul ca trebuie facut fetch din nou la tabel
+      this.shouldItemsTableFetch = true;
+      setTimeout(() => {
+        this.shouldItemsTableFetch = false;
+      }, 1000);
+    },
+    sentDataSuccess(res) {
+      // flag pentru modal
+      this.resSuccessMessage = res.mesaj;
+      this.$refs["my-modal"].show();
+      setTimeout(() => {
+        this.resSuccessMessage = "";
+        this.$refs["my-modal"].hide();
+      }, 2500);
+    },
+    getRowDataForTableItems(rowData) {
+      // click pe numele unui brand selecteaza datele despre masina si le adauga in selectedCarsData
       //  console.log("Date", rowData);
       this.selectedCarsData = { ...rowData };
     },
@@ -106,8 +134,9 @@ export default {
           return res.json();
         })
         .then(data => {
-          data;
-          console.log(data);
+          // la success se apeleaza functiile 
+          this.sentDataSuccess(data);
+          this.itemsTableFetch();
         })
         .catch(err => {
           console.log(err);
@@ -127,8 +156,8 @@ export default {
           return res.json();
         })
         .then(data => {
-          data;
-          console.log(data);
+          this.sentDataSuccess(data);
+          this.itemsTableFetch();
         })
         .catch(error => {
           console.log(error);
@@ -148,6 +177,8 @@ export default {
         })
         .then(data => {
           console.log(data);
+          this.sentDataSuccess(data);
+          this.itemsTableFetch();
         })
         .catch(err => {
           console.log(err);
@@ -157,6 +188,7 @@ export default {
 
   mounted: function() {
     console.log(RequestURL.reqUrl());
+
     /*
     let payload = {
       data: {},

@@ -7,8 +7,8 @@
           <b-dropdown-item @click="sortCarDataItems('brand', 'asc')">Ascendent Brand</b-dropdown-item>
           <b-dropdown-item @click="sortCarDataItems('brand', 'des')">Descendent Brand</b-dropdown-item>
           <b-dropdown-divider></b-dropdown-divider>
-          <b-dropdown-item>Ascendent Cai Putere</b-dropdown-item>
-          <b-dropdown-item>Descendent Cai Putere</b-dropdown-item>
+          <b-dropdown-item @click="sortCarDataItems('caiPutere', 'asc')">Ascendent Cai Putere</b-dropdown-item>
+          <b-dropdown-item @click="sortCarDataItems('caiPutere', 'des')">Descendent Cai Putere</b-dropdown-item>
         </b-nav-item-dropdown>
         <b-nav-item disabled>Disabled</b-nav-item>
       </b-nav>
@@ -23,7 +23,7 @@
             :img-src="item.imagine"
             style="max-width:390px;"
           >
-            <p class="card-text">CP:{{item.caiPutere}} CC:{{item.caiPutere}}</p>
+            <p class="card-text">CP:{{item.caiPutere}} CC:{{item.capacitateCilindrica}}</p>
             <p class="card-text">Culoare: {{item.culoare}} Caroserie: {{item.formaCaroserie}}</p>
             <!-- <p class="d-flex justify-content-center mb-3"><img style="display:block; max-width:190px; height:120px;" :src="item.imagine" /></p> -->
           </b-card>

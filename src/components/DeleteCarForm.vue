@@ -47,6 +47,8 @@ export default {
   methods: {
     submitHandler() {
       this.deleteCar(this.selectedCarsData);
+      //clear input
+      this.form.idMasina = "";
     }
   }
 };

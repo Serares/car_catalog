@@ -4,7 +4,7 @@
     <div class="tabel-car-items" v-if="!isLoading">
       <b-table responsive="sm" striped hover :items="carsArray" :fields="fields">
         <template v-slot:cell(imagine)="data">
-          <img class='car-images' style='display:block; max-width:120px;' :src='data.value' />
+          <img class="car-images" style="display:block; max-width:120px;" :src="data.value" />
         </template>
         <template v-slot:cell(brand)="data">
           <a :href="'#'" @click.prevent="selectRow(data)" class="brand-name">{{data.value}}</a>
@@ -38,7 +38,8 @@ export default {
   },
   props: {
     fetchDataFromApi: Function,
-    getRowDataForTableItems: Function
+    getRowDataForTableItems: Function,
+    shouldItemsTableFetch: Boolean
   },
   methods: {
     selectRow(data) {
@@ -47,7 +48,23 @@ export default {
     }
   },
   computed: {},
-  watch: {},
+  watch: {
+    shouldItemsTableFetch(newVal, oldVal) {
+      oldVal;
+      if (newVal) {
+        this.isLoading=true;
+        console.log("Items table refetched");
+        this.fetchDataFromApi()
+          .then(carsData => {
+            this.carsArray = carsData;
+            this.isLoading = false;
+          })
+          .catch(err => {
+            console.log(err);
+          });
+      }
+    }
+  },
   mounted: function() {
     // console.log("ItemsTable mounted");
     this.fetchDataFromApi()

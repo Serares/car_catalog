@@ -92,9 +92,9 @@ export default {
     submitHandler() {
       this.modifyCar(this.form);
       // clear form fields
-      // for(let item in this.form){
-      //   this.form[item] = "";
-      // }
+      for(let item in this.form){
+        this.form[item] = "";
+      }
     }
   }
 };

@@ -36,7 +36,7 @@ const getSortedData = function(type, direction){
   let sortingInfo = {type:type, direction:direction};
     return new Promise((resolve, reject) => {
       let xhr = new XMLHttpRequest();
-      xhr.open("POST", RequestURL.reqUrl() + "/getItems/sortate/");
+      xhr.open("POST", RequestURL.reqUrl() + "/getItems/sortare/");
       //response type json so it's automatically JSON.parse();
       xhr.setRequestHeader('Content-type', 'application/json; charset=utf-8');
       xhr.responseType = "json";
