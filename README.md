@@ -1,5 +1,7 @@
-# client
-
+## client
+--This is the client of the app
+-- https://car-catalog-vue.herokuapp.com/
+--server is built with nodejs
 ## Project setup
 ```
 npm install
